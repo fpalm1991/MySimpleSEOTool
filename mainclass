@@ -20,7 +20,7 @@ class WebsiteSEO:
     
     def getCurrentSoups(self):
         if len(self.SOUPS) == 0:
-            print("Aktuell sind keine SOUPS vorhanden.")
+            print("No soups were found.")
         else:
             for soup in self.SOUPS:
                 print(soup)
