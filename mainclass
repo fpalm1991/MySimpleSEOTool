@@ -1,0 +1,56 @@
+# Imports
+import requests
+from bs4 import BeautifulSoup
+
+class WebsiteSEO:
+    def __init__(self, URLS):
+        self.URLS = URLS
+        self.REQUESTS = []
+        self.SOUPS = []
+        self.SUPERTEXT = ""
+        self.METATITLES = []
+        # Get requests
+        for url in self.URLS:
+            r = requests.get(url)
+            self.REQUESTS.append(r)
+        # Get soup
+        for request in self.REQUESTS:
+            s = BeautifulSoup(request.text, features="html.parser")
+            self.SOUPS.append(s)
+    
+    def getCurrentSoups(self):
+        if len(self.SOUPS) == 0:
+            print("Aktuell sind keine SOUPS vorhanden.")
+        else:
+            for soup in self.SOUPS:
+                print(soup)
+    
+    def setAdditionalURLS(self, URLS):
+        for url in URLS:
+            self.URLS.append(url)
+            
+    def getCurrentURLS(self):
+        for url in self.URLS:
+            print(url)
+
+    def getText(self):
+        for soup in self.SOUPS:
+            for pTag in soup.find_all('p'):
+                # self.SUPERTEXT += pTag.string
+                try:
+                    if len(self.SUPERTEXT) == 0:
+                        self.SUPERTEXT += (pTag.string)
+                    else:
+                        self.SUPERTEXT += (" " + pTag.string)
+                except TypeError:
+                    pass
+        if len(self.SUPERTEXT) == 0:
+            print("No text was found.")
+        else:
+            print(self.SUPERTEXT)
+            
+    def getMetaTitle(self):
+        for soup in self.SOUPS:
+            for metaTitle in soup.find_all('title'):
+                self.METATITLES.append(metaTitle.string)
+        return self.METATITLES
