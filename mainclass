@@ -18,13 +18,6 @@ class WebsiteSEO:
             s = BeautifulSoup(request.text, features="html.parser")
             self.SOUPS.append(s)
     
-    def getCurrentSoups(self):
-        if len(self.SOUPS) == 0:
-            print("No soups were found.")
-        else:
-            for soup in self.SOUPS:
-                print(soup)
-    
     def setAdditionalURLS(self, URLS):
         for url in URLS:
             self.URLS.append(url)
