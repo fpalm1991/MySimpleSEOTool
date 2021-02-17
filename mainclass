@@ -29,7 +29,6 @@ class WebsiteSEO:
     def getText(self):
         for soup in self.SOUPS:
             for pTag in soup.find_all('p'):
-                # self.SUPERTEXT += pTag.string
                 try:
                     if len(self.SUPERTEXT) == 0:
                         self.SUPERTEXT += (pTag.string)
