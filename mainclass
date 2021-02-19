@@ -4,7 +4,6 @@ class WebsiteSEO:
         self.REQUESTS = []
         self.SOUPS = []
         self.PTAGSARRAY = []
-        self.LITAGTEXT = ""
         self.METATITLES = []
         self.METADESCRIPTIONS = []
         self.HTAGS = {
