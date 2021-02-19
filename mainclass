@@ -66,13 +66,4 @@ class WebsiteSEO:
             for h1TagOnPage in soup.find_all('h1'):
                 self.H1TAGS.append(h1TagOnPage.text)
         return self.H1TAGS
-                
-    def getLiTexts(self):
-        for soup in self.SOUPS:
-            for liText in soup.find_all('li'):
-                try:
-                    self.LITAGTEXT += (liText.text.strip() + " ")
-                except TypeError:
-                    pass
-        return self.LITAGTEXT
     
