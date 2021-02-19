@@ -3,7 +3,7 @@ class WebsiteSEO:
         self.URLS = URLS
         self.REQUESTS = []
         self.SOUPS = []
-        self.PTagsArray = []
+        self.PTAGSARRAY = []
         self.LITAGTEXT = ""
         self.METATITLES = []
         self.METADESCRIPTIONS = []
@@ -36,8 +36,8 @@ class WebsiteSEO:
     def getPTags(self):
         for soup in self.SOUPS:
             for pTag in soup.find_all('p'):
-                self.PTagsArray.append(pTag.text)
-        return self.PTagsArray
+                self.PTAGSARRAY.append(pTag.text.strip())
+        return self.PTAGSARRAY
             
     def getMetaTitles(self):
         for soup in self.SOUPS:
