@@ -1,14 +1,21 @@
-# Imports
-import requests
-from bs4 import BeautifulSoup
-
 class WebsiteSEO:
     def __init__(self, URLS):
         self.URLS = URLS
         self.REQUESTS = []
         self.SOUPS = []
-        self.SUPERTEXT = ""
+        self.PTagsArray = []
+        self.LITAGTEXT = ""
         self.METATITLES = []
+        self.METADESCRIPTIONS = []
+        self.HTAGS = {
+            'h1' : [],
+            'h2' : [],
+            'h3' : [],
+            'h4' : [],
+            'h5' : [],
+            'h6' : [],
+        }
+        self.H1TAGS = []
         # Get requests
         for url in self.URLS:
             r = requests.get(url)
@@ -18,31 +25,54 @@ class WebsiteSEO:
             s = BeautifulSoup(request.text, features="html.parser")
             self.SOUPS.append(s)
     
-    def setAdditionalURLS(self, URLS):
+    def setAdditionalURLs(self, URLS):
         for url in URLS:
             self.URLS.append(url)
             
-    def getCurrentURLS(self):
+    def getCurrentURLs(self):
         for url in self.URLS:
             print(url)
-
-    def getText(self):
+            
+    def getPTags(self):
         for soup in self.SOUPS:
             for pTag in soup.find_all('p'):
-                try:
-                    if len(self.SUPERTEXT) == 0:
-                        self.SUPERTEXT += (pTag.string)
-                    else:
-                        self.SUPERTEXT += (" " + pTag.string)
-                except TypeError:
-                    pass
-        if len(self.SUPERTEXT) == 0:
-            print("No text was found.")
-        else:
-            print(self.SUPERTEXT)
+                self.PTagsArray.append(pTag.text)
+        return self.PTagsArray
             
-    def getMetaTitle(self):
+    def getMetaTitles(self):
         for soup in self.SOUPS:
             for metaTitle in soup.find_all('title'):
                 self.METATITLES.append(metaTitle.string)
         return self.METATITLES
+    
+    def getMetaDescriptions(self):
+        for soup in self.SOUPS:
+            for metaDescription in soup.find_all('meta', attrs={'name':'description'}):
+                self.METADESCRIPTIONS.append(metaDescription['content'])
+        return self.METADESCRIPTIONS
+    
+    def getAllHTags(self):
+        hCounter = 1
+        for soup in self.SOUPS:
+            while hCounter < 7:
+                hTag = 'h' + str(hCounter)
+                for hTagOnPage in soup.find_all(hTag):
+                    self.HTAGS[hTag].append(hTagOnPage.text)
+                hCounter += 1
+        return self.HTAGS
+    
+    def getH1Tags(self):
+        for soup in self.SOUPS:
+            for h1TagOnPage in soup.find_all('h1'):
+                self.H1TAGS.append(h1TagOnPage.text)
+        return self.H1TAGS
+                
+    def getLiTexts(self):
+        for soup in self.SOUPS:
+            for liText in soup.find_all('li'):
+                try:
+                    self.LITAGTEXT += (liText.text.strip() + " ")
+                except TypeError:
+                    pass
+        return self.LITAGTEXT
+    
