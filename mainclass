@@ -4,6 +4,7 @@ class WebsiteSEO:
         self.REQUESTS = []
         self.SOUPS = []
         self.PTAGSARRAY = []
+        self.LITAGSARRAY = []
         self.METATITLES = []
         self.METADESCRIPTIONS = []
         self.HTAGS = {
@@ -66,3 +67,8 @@ class WebsiteSEO:
                 self.H1TAGS.append(h1TagOnPage.text)
         return self.H1TAGS
     
+    def getLiTags(self):
+        for soup in self.SOUPS:
+            for liTag in soup.find_all('li'):
+                self.LITAGSARRAY.append(liTag.text)
+        return self.LITAGSARRAY
