@@ -12,10 +12,7 @@ def safeDictToCSV(inputFileName, inputDict):
         fileName = inputFileName + ".csv"
         with open(fileName,'w') as f:
             for key in inputDict.keys():
-                if key[-1] == ',':
-                    f.write(f"{key} {inputDict[key]}\n")
-                else:
-                    f.write(f"{key}, {inputDict[key]}\n")
+                f.write(f"{key}, {inputDict[key]}\n")
         print(f"The file {fileName} was saved successfully.")
     else:
         print("File could not be saved.")
@@ -50,10 +47,23 @@ def cleanArrayOfWords(inputArray):
                      "zum", "zur", "an", "am", "durch", "werden", "dieser", "dies", "diesem", "einem", "dem", "ihnen", "anhand", "als",
                      "er", "denen", "sollte", "sollen", "wird", "dazu", "bei", "beim", "damit", "man", "wie", "dabei", "sowie", "des",
                      "nur", "darin", "haben", "hat", "statt"]
+    tempArray = []
     returnArray = []
+
     for element in inputArray:
+        if (element[-1] == '.') or (element[-1] == ',') or (element[-1] == ';') or (element[-1] == ':') or (element[-1] == '-') or (element[-1] == '?') or (element[-1] == '!') or (element[-1] == '_'):
+            newElement = element[:-1]
+            tempArray.append(newElement)
+        elif element[0] == '-':
+            newElement = element[1:]
+            tempArray.append(newElement)
+        else:
+            tempArray.append(element)
+
+    for element in tempArray:
         if element.lower() not in wordsToDelete:
             returnArray.append(element)
+
     return returnArray
 
 def countWords(inputArray):
