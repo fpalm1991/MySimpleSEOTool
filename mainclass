@@ -1,3 +1,85 @@
+import requests
+from bs4 import BeautifulSoup
+
+
+# Useful functions
+def printDictionary(inputDict):
+    for k, v in inputDict.items():
+        print(f"{k} {v}")
+
+def safeDictToCSV(inputFileName, inputDict):
+    if type(inputFileName) == str:
+        fileName = inputFileName + ".csv"
+        with open(fileName,'w') as f:
+            for key in inputDict.keys():
+                if key[-1] == ',':
+                    f.write(f"{key} {inputDict[key]}\n")
+                else:
+                    f.write(f"{key}, {inputDict[key]}\n")
+        print(f"The file {fileName} was saved successfully.")
+    else:
+        print("File could not be saved.")
+
+def combineToOneArray(*args):
+    """Accepts undefined number of arrays and adds all elements in arrays into one single array."""
+    returnArray = []
+    for elementOfArgs in args:
+        if type(elementOfArgs) == list:
+            for _ in elementOfArgs:
+                returnArray.append(_)
+        elif type(elementOfArgs) == dict:
+            for _ in elementOfArgs.values():
+                for t in _:
+                    returnArray.append(t)
+    return returnArray
+        
+def createArrayOfWords(inputArray):
+    """Accepts array of strings (sentences) as input and returns single array of words."""
+    returnArray = []
+    for sentence in inputArray:
+        wordArray = sentence.split()
+        for word in wordArray:
+            returnArray.append(word)
+    return returnArray
+
+def cleanArrayOfWords(inputArray):
+    wordsToDelete = ["und", "&", "oder", ".", ",", ";", "aber", "weil", "der", "die", "das", "ein", "eine", "einer",
+                     "mit", "zu", "sich", "in", "ist", "sind", "im", "ihre", "ihr", "mehr", "sie", "es", "was", "wer", "nur",
+                     "welche", "welcher", "welches", "für", "den", "von", "für", "jeweils", "allerdings", "aus", "kommt", "dass",
+                     "werden", "war", "auch", "es", "vom", "solch", "solchen", "alle", "allen", "allem", "nicht", "via", "zu", 
+                     "zum", "zur", "an", "am", "durch", "werden", "dieser", "dies", "diesem", "einem", "dem", "ihnen", "anhand", "als",
+                     "er", "denen", "sollte", "sollen", "wird", "dazu", "bei", "beim", "damit", "man", "wie", "dabei", "sowie", "des",
+                     "nur", "darin", "haben", "hat", "statt"]
+    returnArray = []
+    for element in inputArray:
+        if element.lower() not in wordsToDelete:
+            returnArray.append(element)
+    return returnArray
+
+def countWords(inputArray):
+    """Accepts array of strings (words) as input, counts words and returns dictionary."""
+    returnDict = dict()
+    for i in inputArray:
+        returnDict[i] = returnDict.get(i, 0) + 1
+    return returnDict
+
+def returnDictionarySorted(inputDictionary):
+    """Returns dictionary sorted by values."""
+    returnDict = {k: v for k, v in sorted(inputDictionary.items(), reverse=True, key=lambda item: item[1])}
+    return returnDict
+    
+def analyzeText(inputArray):
+    """Combines functions createArrayOfWords, countWords, printDictionarySorted and returns dictionary with cleaned data."""
+    arrOfWords = createArrayOfWords(inputArray)
+    cleanedArrOfWords = cleanArrayOfWords(arrOfWords)
+    dictCountedWords = countWords(cleanedArrOfWords)
+    dictCountedWordsSorted = returnDictionarySorted(dictCountedWords)
+    return dictCountedWordsSorted
+    
+
+
+
+# Main class
 class WebsiteSEO:
     def __init__(self, URLS):
         self.URLS = URLS
@@ -36,7 +118,7 @@ class WebsiteSEO:
     def getPTags(self):
         for soup in self.SOUPS:
             for pTag in soup.find_all('p'):
-                self.PTAGSARRAY.append(pTag.text.strip())
+                self.PTAGSARRAY.append(pTag.text.strip().lower())
         return self.PTAGSARRAY
             
     def getMetaTitles(self):
@@ -70,5 +152,5 @@ class WebsiteSEO:
     def getLiTags(self):
         for soup in self.SOUPS:
             for liTag in soup.find_all('li'):
-                self.LITAGSARRAY.append(liTag.text)
+                self.LITAGSARRAY.append(liTag.text.strip())
         return self.LITAGSARRAY
